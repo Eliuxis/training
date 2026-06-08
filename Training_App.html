@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Training">
+<meta name="theme-color" content="#16384a">
+<title>Training</title>
+
+<!-- Inline manifest so it's a single shareable file -->
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIiB2aWV3Qm94PSIwIDAgMTgwIDE4MCI+PHJlY3Qgd2lkdGg9IjE4MCIgaGVpZ2h0PSIxODAiIHJ4PSI0MCIgZmlsbD0iIzE2Mzg0YSIvPjxnIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIxMCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIj48bGluZSB4MT0iNDUiIHkxPSI5MCIgeDI9IjEzNSIgeTI9IjkwIi8+PGNpcmNsZSBjeD0iNDUiIGN5PSI5MCIgcj0iMTgiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSIxMzUiIGN5PSI5MCIgcj0iMTgiIGZpbGw9IiNmZmYiLz48L2c+PC9zdmc+">
+<style>
+  :root{
+    --ink:#16384a; --accent:#2c5f7c; --weight:#b5651d; --line:#dde6ec;
+    --bg:#f4f7f9; --card:#ffffff; --soft:#f0f5f8; --green:#2e7d32; --red:#c0392b;
+    --safe-top:env(safe-area-inset-top,0px);
+    --safe-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{background:var(--bg);}
+  body{
+    font-family:-apple-system,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    color:#1a1a1a; line-height:1.5;
+    padding:calc(var(--safe-top) + 12px) 14px calc(96px + var(--safe-bottom));
+    -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:760px;margin:0 auto;}
+  header.top{border-bottom:3px solid var(--accent);padding-bottom:12px;margin-bottom:6px;}
+  .kicker{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);font-weight:700;}
+  h1{font-size:26px;font-weight:800;color:var(--ink);margin-top:3px;}
+  .sub{color:#555;font-size:13px;margin-top:3px;}
+  .savedtag{font-size:11px;color:var(--green);margin-top:4px;font-weight:600;opacity:0;transition:opacity .3s;}
+  .savedtag.show{opacity:1;}
+
+  .tabs{display:flex;gap:6px;margin:14px 0;flex-wrap:wrap;position:sticky;
+    top:var(--safe-top);background:var(--bg);padding:8px 0;z-index:20;}
+  .tab{border:1px solid var(--line);background:var(--card);color:var(--ink);
+    padding:9px 14px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;}
+  .tab.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+
+  .panel{display:none;}
+  .panel.active{display:block;animation:fade .22s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+  .note{background:var(--soft);border-left:3px solid var(--accent);padding:10px 13px;border-radius:0 7px 7px 0;font-size:13px;margin-bottom:13px;}
+  .note strong{color:var(--ink);}
+  .restkey{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:13px;}
+  .restbox{flex:1;min-width:150px;background:var(--soft);border-radius:8px;padding:9px 11px;font-size:12px;}
+  .restbox b{display:block;color:var(--ink);margin-bottom:3px;}
+
+  .ex{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:13px 15px;margin-bottom:11px;}
+  .exhead{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px dotted #c5d4de;padding-bottom:6px;margin-bottom:7px;}
+  .exname{font-size:16px;font-weight:700;color:var(--ink);}
+  .exnum{display:inline-flex;width:21px;height:21px;background:var(--accent);color:#fff;border-radius:50%;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-right:8px;}
+  .extarget{font-size:11px;color:#888;font-style:italic;}
+  .howto{font-size:13px;color:#444;margin-bottom:8px;}
+  .pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+  .pill{background:var(--soft);border-radius:5px;padding:3px 9px;font-size:12px;}
+  .pill strong{color:var(--accent);}
+  .pill.w{background:#fdf0e3;}.pill.w strong{color:var(--weight);}
+  .cues{display:flex;gap:14px;flex-wrap:wrap;}
+  .cue{flex:1;min-width:190px;}
+  .cuelab{font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:2px;}
+  .cuelab.e{color:var(--green);}.cuelab.a{color:var(--red);}
+  .cuetext{font-size:12px;color:#333;}
+
+  .track{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:13px 15px;margin-bottom:11px;}
+  .track h3{font-size:15px;color:var(--ink);margin-bottom:2px;}
+  .track .hint{font-size:11px;color:#888;margin-bottom:9px;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{background:var(--soft);color:var(--ink);font-size:10px;text-transform:uppercase;letter-spacing:.5px;padding:7px 5px;text-align:left;border-bottom:2px solid var(--line);}
+  td{padding:3px 5px;border-bottom:1px solid #eef3f6;vertical-align:middle;}
+  td.exlabel{font-weight:600;color:var(--ink);font-size:12px;}
+  input.cell{width:100%;border:1px solid transparent;border-radius:6px;padding:9px 8px;font-size:16px;font-family:inherit;background:#fafcfd;transition:all .12s;}
+  input.cell:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 2px rgba(44,95,124,.12);}
+  .pb{position:relative;}
+  .pb-badge{position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--weight);font-weight:700;pointer-events:none;}
+  .weekhead{display:flex;align-items:center;gap:9px;margin:13px 0 5px;flex-wrap:wrap;}
+  .weekhead .wlabel{font-weight:700;color:var(--accent);font-size:13px;}
+  .weekhead input.wdate{border:1px solid var(--line);border-radius:6px;padding:7px 9px;font-size:14px;font-family:inherit;}
+  .delweek{margin-left:auto;background:none;border:none;color:#c0392b;font-size:12px;cursor:pointer;opacity:.6;}
+  .addweek{background:transparent;border:1px dashed var(--accent);color:var(--accent);border-radius:8px;padding:9px 14px;font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;font-family:inherit;width:100%;}
+
+  .toolbar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);
+    padding:10px 14px calc(10px + var(--safe-bottom));display:flex;gap:9px;justify-content:center;align-items:center;flex-wrap:wrap;
+    box-shadow:0 -2px 12px rgba(0,0,0,.05);z-index:30;}
+  .btn{border:none;border-radius:9px;padding:11px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .btn.ghost{background:var(--soft);color:var(--ink);}
+  .status{font-size:11px;color:#888;flex-basis:100%;text-align:center;}
+  .foot{background:#f7f9fb;border:1px solid #e3ebf0;border-radius:8px;padding:11px 13px;font-size:12px;color:#555;margin-top:6px;}
+  .foot strong{color:var(--ink);}
+  .install{background:#fff8ee;border:1px solid #f0dcc0;border-radius:9px;padding:11px 13px;font-size:12.5px;color:#6b4a1d;margin-bottom:13px;}
+  .install b{color:var(--weight);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="kicker">Home Training Program</div>
+    <h1>Training</h1>
+    <div class="sub">Two full-body strength days + two tennis sessions + SkiErg.</div>
+    <div class="savedtag" id="savedtag">✓ Saved automatically</div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="warmup">Warm-Up</button>
+    <button class="tab" data-tab="dayA">Strength A</button>
+    <button class="tab" data-tab="dayB">Strength B</button>
+    <button class="tab" data-tab="progress">📈 Log</button>
+  </div>
+
+  <div class="panel active" id="warmup">
+    <div class="install" id="installTip"><b>Make it an app:</b> in Safari, tap the Share button, then <b>Add to Home Screen</b>. It then opens full-screen with its own icon and saves your progress automatically on this phone.</div>
+    <div class="note"><strong>Do this before both strength days.</strong> ~10 min. Raises blood flow and rehearses the movements so the right muscles switch on before you load them.</div>
+    <div class="ex"><div class="exhead"><span class="exname">SkiErg — easy pace</span><span class="extarget">5 min</span></div><div class="howto">Steady, conversational effort, just warm. Full-body, low-impact. Finish warm, not tired.</div></div>
+    <div class="ex"><div class="exhead"><span class="exname">Bodyweight Squats</span><span class="extarget">10 reps</span></div><div class="howto">Sit hips down and back, chest tall, knees over toes.</div></div>
+    <div class="ex"><div class="exhead"><span class="exname">Bodyweight Hip Hinges</span><span class="extarget">10 reps</span></div><div class="howto">Hands on hips, push hips back with soft knees and flat back, stand by squeezing glutes.</div></div>
+    <div class="ex"><div class="exhead"><span class="exname">Arm Circles</span><span class="extarget">10 + 10</span></div><div class="howto">Slow, full circles. Warms the shoulders.</div></div>
+    <div class="ex"><div class="exhead"><span class="exname">Glute Bridges</span><span class="extarget">10 reps</span></div><div class="howto">On your back, knees bent, lift hips by squeezing glutes.</div></div>
+    <div class="ex"><div class="exhead"><span class="exname">First exercise — light set</span><span class="extarget">1 × 8</span></div><div class="howto">One light set of the day's first move to bridge into working sets.</div></div>
+    <div class="foot"><strong>Doctor check:</strong> the low resting heart rate on the health report is most likely just fitness, but a quick word with a doctor before harder training is sensible.</div>
+  </div>
+
+  <div class="panel" id="dayA">
+    <div class="restkey">
+      <div class="restbox"><b>Between sets</b>90s big lifts · 60s row &amp; plank.</div>
+      <div class="restbox"><b>Finding weight</b>Last 2 reps hard but clean = right. 3+ in the tank = go heavier.</div>
+    </div>
+    <div id="dayA-ex"></div>
+    <div class="foot"><strong>Progress:</strong> when 12 stops feeling hard, go up one weight and drop to 8 reps, then rebuild. <strong>Fuel:</strong> being lean, training only builds muscle if you eat enough, protein across the day.</div>
+  </div>
+
+  <div class="panel" id="dayB">
+    <div class="restkey">
+      <div class="restbox"><b>Between sets</b>90s big lifts · 60s push-up, row, plank.</div>
+      <div class="restbox"><b>Single-side</b>One side, then the other, then rest before next set.</div>
+    </div>
+    <div class="note"><strong>Day B emphasis:</strong> single-leg and single-arm work that corrects the imbalance tennis creates and protects the knees and ankles.</div>
+    <div id="dayB-ex"></div>
+    <div class="foot"><strong>Week:</strong> Mon A · Tue Tennis · Wed rest/SkiErg · Thu B · Fri rest · Sat Tennis · Sun rest. Avoid heavy strength right before tennis.</div>
+  </div>
+
+  <div class="panel" id="progress">
+    <div class="note"><strong>Just type — it saves itself.</strong> Each week, fill in the weight and reps you hit. A 🔶 PB tag appears when you beat your previous best weight on a move.</div>
+    <div class="track">
+      <h3>Strength Day A</h3>
+      <div class="hint">Weight (per hand, or one DB for goblet) and reps you hit.</div>
+      <div id="progA"></div>
+      <button class="addweek" data-day="A">+ Add a week</button>
+    </div>
+    <div class="track">
+      <h3>Strength Day B</h3>
+      <div class="hint">Weight and reps you hit.</div>
+      <div id="progB"></div>
+      <button class="addweek" data-day="B">+ Add a week</button>
+    </div>
+  </div>
+</div>
+
+<div class="toolbar">
+  <button class="btn ghost" id="exportBtn">⬇️ Backup to file</button>
+  <button class="btn ghost" id="importBtn">⬆️ Restore backup</button>
+  <input type="file" id="fileInput" accept=".json" style="display:none">
+  <span class="status" id="status">Your progress saves automatically on this phone. Backup is optional, for safety or moving devices.</span>
+</div>
+
+<script>
+const exercisesA = [
+  {n:"Goblet Squat", t:"legs · glutes · core", w:"8–12 kg (one DB)", reps:"8–12", rest:"90s",
+   how:"One DB vertical against the chest, cupped in both hands. Feet wider than hips, toes out. Sit down and back to about parallel, drive up through the heels.",
+   e:"Knees out over toes, chest tall, core braced. Feel it in thighs and glutes.",
+   a:"Knees caving in, heels lifting, lower back rounding."},
+  {n:"Romanian Deadlift", t:"hamstrings · glutes · back", w:"8–10 kg each", reps:"8–12", rest:"90s",
+   how:"DB each hand at thighs, soft fixed knees. Push hips back, slide DBs down the legs until a hamstring stretch, drive hips forward to stand.",
+   e:"A hip movement — power from glutes and hamstrings. Chest proud, back flat.",
+   a:"Rounding the lower back. Squatting it (knees drifting forward)."},
+  {n:"Floor Press", t:"chest · shoulders · triceps", w:"6–8 kg each", reps:"8–12", rest:"90s",
+   how:"On your back, knees bent, DB each hand over the chest. Lower till upper arms touch the floor, press up.",
+   e:"Shoulder blades together and down. Press with the chest.",
+   a:"Elbows flaring out (keep ~45°). DBs over the face. Don't bounce."},
+  {n:"Bent-Over Row", t:"upper back · lats · biceps", w:"7–9 kg each", reps:"8–12", rest:"60s",
+   how:"Hinge to ~45°, DBs hanging. Pull to the lower ribs, elbows leading, squeeze shoulder blades.",
+   e:"Pull with the back, hands are hooks. Squeeze blades together.",
+   a:"Rounding the back. Shrugging. Swinging with momentum."},
+  {n:"Plank", t:"whole core", w:"bodyweight", reps:"30–45s", rest:"60s",
+   how:"Forearms down, elbows under shoulders, straight line head to heels.",
+   e:"Squeeze glutes, brace abs like bracing for a punch.",
+   a:"Hips sagging or piking. Back ache = hips dropped, reset."}
+];
+const exercisesB = [
+  {n:"Split Squat", t:"legs · glutes · balance", w:"5–8 kg each", reps:"8–12/leg", rest:"90s",
+   how:"Long stride, back heel up, DB each hand at sides. Lower so the back knee drops, drive up through the front heel. One leg, then switch.",
+   e:"Weight through the front heel; back leg balances.",
+   a:"Front knee caving in. Wobbling — hold a wall lightly at first."},
+  {n:"Dumbbell Deadlift", t:"hips · glutes · whole back", w:"10–14 kg each", reps:"8–12", rest:"90s",
+   how:"DBs on the floor outside the feet. Hinge down, hips back, flat back, grip both. Stand by driving hips forward and squeezing glutes.",
+   e:"Drive the floor away with the legs, finish with the glutes. Great for bone.",
+   a:"Rounding the back — brace first. Jerking it up."},
+  {n:"Push-Up", t:"chest · shoulders · triceps · core", w:"bodyweight", reps:"8–12", rest:"60s",
+   how:"Pick a level you can do clean: wall → counter → knees → full. Lower chest with elbows ~45°, press up.",
+   e:"One straight line, glutes and core braced. Push the floor away.",
+   a:"Hips sagging or sticking up. Elbows flaring. Half reps."},
+  {n:"Single-Arm Row", t:"back · lats · fixes imbalance", w:"8–12 kg", reps:"8–12/arm", rest:"60s",
+   how:"Knee and same-side hand on a bench, back flat. DB in the other hand. Pull to the hip, elbow leading and close. Switch.",
+   e:"Pull with the back, elbow up and back, squeeze the blade in.",
+   a:"Twisting the torso. Rounding the back. Shrugging."},
+  {n:"Side Plank", t:"obliques · lateral core · hips", w:"bodyweight", reps:"20–30s/side", rest:"60s",
+   how:"On your side, forearm down, elbow under shoulder, legs stacked. Lift hips to a straight line. Switch.",
+   e:"Push hips up, squeeze the side of the waist and glutes.",
+   a:"Hips sagging. Rolling forward/back. Too hard? Rest bottom knee down."}
+];
+
+function renderEx(list, elId){
+  document.getElementById(elId).innerHTML = list.map((x,i)=>`
+    <div class="ex">
+      <div class="exhead"><span class="exname"><span class="exnum">${i+1}</span>${x.n}</span><span class="extarget">${x.t}</span></div>
+      <div class="howto">${x.how}</div>
+      <div class="pills">
+        <span class="pill w"><strong>${x.w}</strong></span>
+        <span class="pill"><strong>3</strong> sets</span>
+        <span class="pill"><strong>${x.reps}</strong></span>
+        <span class="pill"><strong>${x.rest}</strong> rest</span>
+      </div>
+      <div class="cues">
+        <div class="cue"><div class="cuelab e">Engage</div><div class="cuetext">${x.e}</div></div>
+        <div class="cue"><div class="cuelab a">Watch out</div><div class="cuetext">${x.a}</div></div>
+      </div>
+    </div>`).join("");
+}
+renderEx(exercisesA,"dayA-ex");
+renderEx(exercisesB,"dayB-ex");
+
+// ---------- persistence ----------
+const KEY="training_progress_v1";
+let state={A:[],B:[]};
+
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify(state)); flashSaved(); }
+  catch(e){ document.getElementById("status").textContent="Couldn't auto-save — use Backup to file instead."; }
+}
+function load(){
+  try{ const raw=localStorage.getItem(KEY); if(raw){ const d=JSON.parse(raw); if(d.A&&d.B) state=d; } }catch(e){}
+}
+let flashT;
+function flashSaved(){
+  const t=document.getElementById("savedtag");
+  t.classList.add("show"); clearTimeout(flashT);
+  flashT=setTimeout(()=>t.classList.remove("show"),1200);
+}
+
+function blankWeek(day){const list=day==="A"?exercisesA:exercisesB;return {date:"",rows:list.map(()=>({w:"",r:""}))};}
+
+function bestSoFar(day,ri,uptoWeek){
+  let best=null;
+  for(let w=0; w<uptoWeek; w++){
+    const v=parseFloat(state[day][w].rows[ri].w);
+    if(!isNaN(v)){ if(best===null||v>best) best=v; }
+  }
+  return best;
+}
+
+function renderProgress(){
+  ["A","B"].forEach(day=>{
+    const list=day==="A"?exercisesA:exercisesB;
+    const host=document.getElementById("prog"+day);
+    if(state[day].length===0) state[day].push(blankWeek(day));
+    host.innerHTML=state[day].map((week,wi)=>{
+      const rows=list.map((x,ri)=>{
+        const cur=parseFloat(week.rows[ri].w);
+        const prevBest=bestSoFar(day,ri,wi);
+        const isPB=(!isNaN(cur) && prevBest!==null && cur>prevBest);
+        return `
+        <tr>
+          <td class="exlabel">${x.n}</td>
+          <td class="pb">
+            <input class="cell" inputmode="decimal" data-day="${day}" data-week="${wi}" data-row="${ri}" data-f="w" value="${week.rows[ri].w||""}" placeholder="${x.w.split(' ')[0]}">
+            ${isPB?'<span class="pb-badge">🔶 PB</span>':''}
+          </td>
+          <td><input class="cell" inputmode="numeric" data-day="${day}" data-week="${wi}" data-row="${ri}" data-f="r" value="${week.rows[ri].r||""}" placeholder="reps"></td>
+        </tr>`;}).join("");
+      const del = state[day].length>1 ? `<button class="delweek" data-day="${day}" data-week="${wi}">Remove</button>`:"";
+      return `
+        <div class="weekhead">
+          <span class="wlabel">Week ${wi+1}</span>
+          <input class="wdate" type="date" data-day="${day}" data-week="${wi}" data-f="date" value="${week.date||""}">
+          ${del}
+        </div>
+        <table><thead><tr><th>Exercise</th><th>Weight (kg)</th><th>Reps</th></tr></thead><tbody>${rows}</tbody></table>`;
+    }).join("");
+  });
+  attach();
+}
+function attach(){
+  document.querySelectorAll(".cell, .wdate").forEach(inp=>{
+    inp.oninput=e=>{
+      const d=e.target.dataset;
+      if(d.f==="date") state[d.day][d.week].date=e.target.value;
+      else state[d.day][d.week].rows[d.row][d.f]=e.target.value;
+      save();
+    };
+    // re-render PB badges when leaving a weight field
+    if(inp.dataset.f==="w") inp.onblur=()=>renderProgress();
+  });
+  document.querySelectorAll(".delweek").forEach(b=>{
+    b.onclick=()=>{ state[b.dataset.day].splice(+b.dataset.week,1); save(); renderProgress(); };
+  });
+}
+document.querySelectorAll(".addweek").forEach(b=>{
+  b.onclick=()=>{ state[b.dataset.day].push(blankWeek(b.dataset.day)); save(); renderProgress(); };
+});
+
+// tabs
+document.querySelectorAll(".tab").forEach(t=>{
+  t.onclick=()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    document.getElementById(t.dataset.tab).classList.add("active");
+    if(t.dataset.tab==="progress") renderProgress();
+    window.scrollTo(0,0);
+  };
+});
+
+// backup / restore
+document.getElementById("exportBtn").onclick=()=>{
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=`training-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+};
+document.getElementById("importBtn").onclick=()=>document.getElementById("fileInput").click();
+document.getElementById("fileInput").onchange=e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{ try{const d=JSON.parse(r.result); if(d.A&&d.B){state=d; save(); renderProgress(); document.getElementById("status").textContent="Backup restored.";}}catch(err){document.getElementById("status").textContent="Couldn't read that file.";} };
+  r.readAsText(f);
+};
+
+// hide install tip when running as installed app
+if(window.navigator.standalone===true){ const it=document.getElementById("installTip"); if(it) it.style.display="none"; }
+
+load();
+renderProgress();
+</script>
+</body>
+</html>
